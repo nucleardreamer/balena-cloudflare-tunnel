@@ -1,0 +1,73 @@
+version: '2'
+services:
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    network_mode: host
+    restart: always
+    command: tunnel run
+    privileged: true
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+    labels:
+      io.balena.features.dbus: '1'
+    environment:
+      DBUS_SYSTEM_BUS_ADDRESS: "unix:path=/host/run/dbus/system_bus_socket"
+    # the TUNNEL_TOKEN variable is given to you in the cloudflare tunnel setup. It will be picked up automatically by this container, and you will need to set it in the balena dashboard. You can keep your token in the docker-compose file, but know that it will not be hidden by anyone that has access to view your releases
+    # environment:
+    #   - TUNNEL_TOKEN=XXXXXXXX
+
+  ####################################################################
+  # Everything below here is optional and for demonstration purposes #
+  ####################################################################
+
+  # Optional: device UI
+  # https://github.com/maggie0002/balena-device-ui
+  balena-starter-interface:
+    image: ghcr.io/maggie0002/bdu:latest
+    restart: always
+    privileged: true
+    ports:
+      - "80:80"
+    volumes:
+      - "bdu_db:/app/db" # Stores UI database files
+      - "bdu_storage:/app/storage" # Storage for the File Manager. See docs for more info.
+    environment:
+      NETWORK_MODE: bridge # Tell the app if running in `bridge` or `host` network mode
+      SET_HOSTNAME: "tunnel" # Optional. Changes the device hostname. UI will become accesible on `xxx.local`.
+      UDEV: on # Enables ability to mount USB drives in to the container
+    labels:
+      io.balena.features.supervisor-api: 1
+      io.balena.features.balena-api: 1
+
+  ## Optional: Wi-Fi controller:
+  ## https://github.com/maggie0002/balena-py-wifi-connect
+  py-wifi-connect:
+    image: ghcr.io/maggie0002/py-wifi-connect:latest
+    network_mode: "host"
+    restart: always
+    volumes:
+      - "pwc_db:/app/db" # Optional if not setting the hotspot ssid and password via the API
+    environment:
+      ## Listening IP and port ##
+      PWC_HOST: bridge
+      PWC_PORT: 9090
+
+      ## Hotspot details ##
+      PWC_HOTSPOT_SSID: "Balena Starter Interface"
+      PWC_HOTSPOT_PASSWORD: "balena01" # Optional. Must be 8 characters or more.
+
+      ## Required system variables ##
+      DBUS_SYSTEM_BUS_ADDRESS: "unix:path=/host/run/dbus/system_bus_socket"
+    labels:
+      io.balena.features.dbus: "1"
+    cap_add:
+      - NET_ADMIN
+    privileged: true # This can be removed if you do not need the LED indicator.
+
+## Optional: Volumes for balena-starter-interface
+volumes:
+  bdu_db:
+  bdu_storage:
+  pwc_db:

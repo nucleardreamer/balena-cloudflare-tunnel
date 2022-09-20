@@ -1,0 +1,19 @@
+name: cloudflare-tunnel
+description: >-
+  A simple block to route your application through Cloudflare Tunnel
+version: 0.0.1
+type: sw.application
+assets:
+  repository:
+    type: blob.asset
+    data:
+      url: 'https://github.com/nucleardreamer/balena-cloudflare-tunnel'
+  logo:
+    type: blob.asset
+    data:
+      url: 'https://raw.githubusercontent.com/nucleardreamer/balena-cloudflare-tunnel/master/logo.png'
+data:
+  defaultDeviceType: genericx86-64-ext
+  supportedDeviceTypes:
+    - intel-nuc
+    - genericx86-64-ext
