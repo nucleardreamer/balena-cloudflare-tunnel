@@ -58,3 +58,7 @@ services:
       # the TUNNEL_TOKEN variable is given to you in the cloudflare tunnel setup. It will be picked up automatically by this container, and you will need to set it in the balena dashboard. You can keep your token in the docker-compose file, but know that it will not be hidden by anyone that has access to view your releases
       # TUNNEL_TOKEN: XXXXXXXX
 ```
+
+## Architectures
+
+If you are looking for support on most other architectures besides `amd64` and `arm64`, there is a community multiarch repository maintained by `@maggie0002` [here](https://github.com/maggie0002/cloudflared-docker-multiarch/pkgs/container/cloudflared)
