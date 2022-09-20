@@ -4,7 +4,7 @@ At balena, we have the concept of a [public URL](https://www.balena.io/docs/lear
 
 This is extremely useful for development, but not fit for running mission critical applications, as we don't have an SLA or guarentee of uptime on the public device URL feature.
 
-By using cloudflare tunnel, you are getting a near 1-1 equivilent of the [public URL](https://www.balena.io/docs/learn/develop/runtime/#public-device-urls) feature, but with _many_ more options. You would want to look at using this service for rolling out business critical access to your devices in the field.
+By using cloudflare tunnel, you are getting a near 1-1 equivilent of the public URL feature, but with _many_ more options. You would want to look at using this service for rolling out business critical access to your devices in the field.
 
 ## How it works
 
