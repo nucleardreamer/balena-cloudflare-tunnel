@@ -34,4 +34,27 @@ So, your device is not only acting as normal on your local network, but is also 
 
 ## Setup
 
-You will need to get a `TUNNEL_TOKEN` environment variable set for your device, which you get from 'Connect your app' in your Cloudflare tunnel. You can find instructions on setting it up [here](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide/remote/)
+You will need to set the `TUNNEL_TOKEN` environment variable for your device, which you get from 'Connect your app' in your Cloudflare tunnel. You can find instructions on setting it up [here](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide/remote/)
+
+Here is an example of the setup to use in your `docker-compose.yml`:
+
+```
+version: '2'
+services:
+  
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    network_mode: host
+    restart: always
+    command: tunnel run
+    privileged: true
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+    labels:
+      io.balena.features.dbus: '1'
+    environment:
+      DBUS_SYSTEM_BUS_ADDRESS: "unix:path=/host/run/dbus/system_bus_socket"
+      # the TUNNEL_TOKEN variable is given to you in the cloudflare tunnel setup. It will be picked up automatically by this container, and you will need to set it in the balena dashboard. You can keep your token in the docker-compose file, but know that it will not be hidden by anyone that has access to view your releases
+      # TUNNEL_TOKEN: XXXXXXXX
+```
